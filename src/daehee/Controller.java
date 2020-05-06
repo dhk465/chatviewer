@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
