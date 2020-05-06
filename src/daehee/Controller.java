@@ -21,7 +21,7 @@ public class Controller {
     private Path path;
     private File file;
 
-    Message msg;
+    private Message msg;
 
     public void openFileChooser(ActionEvent actionEvent) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("chatviewer.fxml"));
