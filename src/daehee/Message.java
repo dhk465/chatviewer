@@ -20,9 +20,13 @@ public class Message {
         this.msgPath = path;
     }
 
-    private void parseText(Path path) throws IOException {
-        wholeText = Files.readString(path);
+    public void parseText() throws IOException {
+        wholeText = Files.readString(msgPath);
     }
+
+//    private Token getNext() {
+//        String fileString =
+//    }
 
     public Date getTimeRecorded() {
         return timeRecorded;
@@ -46,5 +50,13 @@ public class Message {
 
     public void setMessageText(String messageText) {
         this.messageText = messageText;
+    }
+
+    public void printWholeText() {
+        System.out.println(wholeText);
+    }
+
+    public Path getMsgPath() {
+        return msgPath;
     }
 }

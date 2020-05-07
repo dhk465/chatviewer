@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -18,12 +19,11 @@ public class Controller {
     private Button openButton;
     @FXML
     private Label pathLabel;
-    private Path path;
     private File file;
 
     private Message msg;
 
-    public void openFileChooser(ActionEvent actionEvent) {
+    public void openFileChooser(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("chatviewer.fxml"));
         loader.setController(this);
         FileChooser fileChooser = new FileChooser();
@@ -31,13 +31,11 @@ public class Controller {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Message Files", "*.msg"));
         file = fileChooser.showOpenDialog(((Node)actionEvent.getTarget()).getScene().getWindow());
         if (file != null) {
-            path = Paths.get(file.getAbsolutePath());
-            msg = new Message(path);
-            pathLabel.setText(path.toString());
-        }
-    } // use of File legitimate?
+            msg = new Message(Paths.get(file.getAbsolutePath()));
+            pathLabel.setText(msg.getMsgPath().toString());
 
-    public Path getPath() {
-        return path;
+            msg.parseText();
+            msg.printWholeText();
+        }
     }
 }
