@@ -5,17 +5,19 @@ import java.time.format.DateTimeFormatter;
 
 public class MessageToken {
 
-    private DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private LocalTime timeRecorded;
+//    private DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+//    private LocalTime timeRecorded;
+    private String timeRecorded;
     private String username;
     private String messageText;
 
-    public void parseLine(Tokenizer tokenizer) throws Exception {
+    public void parseLine(Tokenizer tokenizer) {
         Tokens indicator = tokenizer.getIndicator();
         String token = tokenizer.getContext(indicator);
         switch (indicator) {
             case TIMESTAMP:
-                timeRecorded = LocalTime.parse(token, timeFormat);
+                // timeRecorded = LocalTime.parse(token, timeFormat);
+                timeRecorded = token;
                 break;
             case NICKNAME:
                 username = token;
@@ -24,6 +26,7 @@ public class MessageToken {
                 messageText = token;
                 break;
             case EOL:
+                System.out.println(timeRecorded + username + messageText);
                 break;
         }
     }

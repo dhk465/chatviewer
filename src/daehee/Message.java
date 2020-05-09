@@ -3,60 +3,42 @@ package daehee;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
+
+import static daehee.Tokens.*;
 
 public class Message {
 
-    private DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-
     private String wholeText;
-    private Date timeRecorded;
-    private String username;
-    private String messageText;
+    private String[] lines;
     private Path msgPath;
+    private ArrayList<MessageToken> msgArray;
+    private MessageToken messageToken;
+    private Tokenizer tokenizer;
 
     public Message(Path path) {
         this.msgPath = path;
     }
 
-    public void parseText() throws IOException {
+    public void getTextFromFile() throws IOException {
         wholeText = Files.readString(msgPath);
+        lines = wholeText.split(System.getProperty("line.separator"));
     }
 
-//    private Token getNext() {
-//        String fileString =
-//    }
-
-    public Date getTimeRecorded() {
-        return timeRecorded;
-    }
-
-    public void setTimeRecorded(Date timeRecorded) {
-        this.timeRecorded = timeRecorded;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public void printWholeText() {
-        System.out.println(wholeText);
+    // tokenize and store a single message containing information about time, user and message content
+    public void convertMsg() {
+        messageToken = new MessageToken();
+        for (String line : lines) {
+            tokenizer = new Tokenizer(line);
+            messageToken.parseLine(tokenizer);
+            if (tokenizer.getIndicator() == EOL) {
+                msgArray.add(messageToken);
+            }
+        }
     }
 
     public Path getMsgPath() {
         return msgPath;
     }
+
 }

@@ -8,9 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 
+import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
@@ -33,9 +33,12 @@ public class Controller {
         if (file != null) {
             msg = new Message(Paths.get(file.getAbsolutePath()));
             pathLabel.setText(msg.getMsgPath().toString());
-
-            msg.parseText();
-            msg.printWholeText();
+            msg.getTextFromFile();
+            try {
+                msg.convertMsg();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
