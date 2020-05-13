@@ -1,5 +1,9 @@
 package daehee;
 
+/**
+ * The class defines the range and types of tokens.
+ */
+
 public abstract class Token {
 
     public abstract Tokens getType();

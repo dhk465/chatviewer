@@ -1,18 +1,26 @@
 package daehee;
 
-// prepares a line to tokenize into different types
+/**
+ * The class prepares a line to tokenize into different types.
+ */
 public class Tokenizer {
 
     private String line;
 
+    /**
+     * The constructor of Tokenizer takes a line of string as an argument.
+     * @param line a string representing a line of a message.
+     */
     public Tokenizer(String line) {
         this.line = line;
     }
 
-    // checks for the front substring of a line
-    // and returns the rest of the string after colon (:)
-    // if the front substring matches any of the Indicators
-    // otherwise throws an exception for a wrong input file
+    /**
+     * It checks for the front substring of a line
+     * and returns the rest of the string after colon (:)
+     * if the front substring matches any of the Indicators
+     * otherwise throws an exception for a wrong input file.
+     */
     public Tokens getIndicator() {
         Tokens ind = Tokens.EOI;
         if (line.trim().isEmpty()) {
@@ -31,9 +39,12 @@ public class Tokenizer {
         return ind;
     }
 
-    // checks if the indicator is equivalent to any of Tokens
-    // and returns the rest of the string after colon (:)
+    /**
+     * It checks if the indicator is equivalent to any of Tokens
+     * and returns the rest of the string after colon (:).
+     */
     public String getContext(Tokens indicator) {
+
         if (indicator == Tokens.TIMESTAMP || indicator == Tokens.NICKNAME) {
             return line.substring(5);
         } else if (indicator == Tokens.CONTENT) {
@@ -43,7 +54,4 @@ public class Tokenizer {
         }
     }
 
-    public void setLine(String line) {
-        this.line = line;
-    }
 }

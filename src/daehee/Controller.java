@@ -37,7 +37,7 @@ public class Controller {
             try {
                 msg.convertMsg();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
