@@ -26,6 +26,8 @@ public class Renderer {
         this.message = message;
         this.textFlow = textFlow;
 
+        System.out.println(message.getMsgTokens().toString());
+
         for (int i = 0; i < message.getMsgTokens().size(); i++) {
             switch (i % 4) {
                 case 0:

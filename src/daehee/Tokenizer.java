@@ -27,10 +27,14 @@ public class Tokenizer {
                 if (line.startsWith("Message:")) {
                     arrayList.add(line.substring(8));
                 }
+                if (line.isEmpty()) {
+                    arrayList.add("");
+                }
             }
         } else {
             throw new IncorrectFormatException("File Format Is Incorrect.");
         }
+        System.out.println(arrayList.toString());
         return arrayList;
     }
 
