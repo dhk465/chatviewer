@@ -1,6 +1,9 @@
 package daehee;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,62 +14,39 @@ import java.util.Arrays;
  */
 public class Renderer {
 
-    private ArrayList<Object> arrRendered = new ArrayList<>();
-    private String[] smiles = {":)", ":("};
-    private Image smileImage;
+    private Message message;
+    private TextFlow textFlow;
+    private final String[] smiles = {":)", ":("};
 
-    /**
-     * The constructor creates an ArrayList of a message stub
-     * using convertSmile and searchSmile methods
-     * when the class is instantiated.
-     * The first two elements are time and username, and the rest is the message text.
-     * @param timeRendered the string of time recorded for the message text
-     * @param username the string of username who wrote the message text
-     * @param rawMsg the raw string of the message text
-     * @throws Exception the image resource for some smiles does not exist.
+    /**It passes all the message items into a text flow object using tokens stored in Message class
+     * @param message an instance of Message that contains processed tokens
+     * @param textFlow an instance of textFlow to display tokens
      */
-    public Renderer(String timeRendered, String username, String rawMsg) throws Exception {
-        this.arrRendered.add(timeRendered);
-        this.arrRendered.add(username);
-        this.arrRendered.addAll(this.searchSmile(rawMsg));
-    }
+    public void render(Message message, TextFlow textFlow) {
+        this.message = message;
+        this.textFlow = textFlow;
 
-    /**
-     * It converts a raw string into a matching Smiley image.
-     * @param smileString a raw string that can be converted to an image
-     * @return an image file that represents a raw string
-     * @throws Exception the image resource for some smiles does not exist.
-     */
-    private Image convertSmile(String smileString) throws Exception {
-        switch (smileString) {
-            case ":)":
-                smileImage = new Image("resources/happy.gif");
-                break;
-            case ":(":
-                smileImage = new Image("resources/sad.gif");
-                break;
-            default:
-                throw new Exception("No image to render such smile");
-        }
-        return smileImage;
-    }
-
-    /**
-     * It iterates through a raw text and converts all existing Smiley strings into images.
-     * @param rawMsg a string of text given to convert into rendered objects
-     * @return an ArrayList of all strings and smiley images stripped of whitespaces
-     * @throws Exception the image resource for some smiles does not exist.
-     */
-    private ArrayList<Object> searchSmile(String rawMsg) throws Exception {
-        ArrayList<Object> arr = new ArrayList<>(Arrays.asList(rawMsg.split(" ")));
-        for (String smile: smiles) {
-            for (int i = 0; i < arr.size(); i++) {
-                if (arr.get(i).equals(smile)) {
-                   arr.set(i, convertSmile(smile));
-                }
+        for (int i = 0; i < message.getMsgTokens().size(); i++) {
+            switch (i % 4) {
+                case 0:
+                    textFlow.getChildren().add(new Text("[" + message.getMsgTokens().get(i) + "] "));
+                    break;
+                case 1:
+                    textFlow.getChildren().add(new Text(message.getMsgTokens().get(i) + ": "));
+                    break;
+                case 2:
+                    for (Object contentToken: (ArrayList<Object>) message.getMsgTokens().get(i)) {
+                        if (contentToken instanceof String) {
+                            textFlow.getChildren().add(new Text((String)contentToken));
+                        } else {
+                            textFlow.getChildren().add(new ImageView(((Smile)contentToken).resource));
+                        }
+                    }
+                    break;
+                case 3:
+                    textFlow.getChildren().add(new Text(System.getProperty("line.separator")));
+                    break;
             }
         }
-        return arr;
     }
-
 }

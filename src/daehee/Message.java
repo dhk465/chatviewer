@@ -1,8 +1,8 @@
 package daehee;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -13,51 +13,33 @@ import java.util.ArrayList;
 
 public class Message {
 
-    private String wholeText;
-    private String[] lines;
-    private Path msgPath;
-    private ArrayList<MessageToken> msgArray = new ArrayList<>();
-    private MessageToken messageToken;
+    private String text;
     private Tokenizer tokenizer;
+    private ArrayList<Object> msgTokens = new ArrayList<>();
 
-    /**
-     * The constructor of a Message object takes a path of a file as an argument.
-     * @param path a Path object of a file to get the message text from.
-     */
-
-    public Message(Path path) {
-        this.msgPath = path;
+    public void read(File file) throws IncorrectFormatException {
+        tokenizer = new Tokenizer();
+        try {
+            text = Files.readString(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.iterateText();
     }
 
-    /**
-     * It reads strings from the text and stores line by line.
-     * @throws IOException may occur when the file reader is interrupted or not permitted by the file system.
-     */
-    public void getTextFromFile() throws IOException {
-        wholeText = Files.readString(msgPath);
-        lines = wholeText.split(System.getProperty("line.separator"));
-    }
-
-    /**
-     * It creates and stores the tokenized messages in an ArrayList of the Message object.
-     */
-    public void convertMsg() {
-        messageToken = new MessageToken();
-        for (String line : lines) {
-            tokenizer = new Tokenizer(line);
-            messageToken.parseLine(tokenizer);
-            if (tokenizer.getIndicator() == Tokens.EOL) {
-                msgArray.add(messageToken);
+    private void iterateText() throws IncorrectFormatException {
+        tokenizer = new Tokenizer();
+        // first, tokenize each message stub into timestamp, nickname, content and "end of stub"
+        msgTokens = tokenizer.tokenizeMessage(text);
+        for (int i = 0; i < msgTokens.size(); i++) {
+            if (i % 4 == 2) {
+                // then tokenize each content into smiles and strings
+                msgTokens.set(i, tokenizer.tokenizeContent(msgTokens.get(i)));
             }
         }
     }
 
-    /**
-     * It returns the path of the file.
-     * @return a Path that was input during the instantiation of the object.
-     */
-    public Path getMsgPath() {
-        return msgPath;
+    public ArrayList<Object> getMsgTokens() {
+        return msgTokens;
     }
-
 }

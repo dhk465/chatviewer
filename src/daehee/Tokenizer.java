@@ -1,19 +1,11 @@
 package daehee;
 
+import java.util.ArrayList;
+
 /**
- * The class prepares a line to tokenize into different types.
+ * The class prepares a message to tokenize into different types.
  */
 public class Tokenizer {
-
-    private String line;
-
-    /**
-     * The constructor of Tokenizer takes a line of string as an argument.
-     * @param line a string representing a line of a message.
-     */
-    public Tokenizer(String line) {
-        this.line = line;
-    }
 
     /**
      * It checks for the front substring of a line
@@ -21,37 +13,95 @@ public class Tokenizer {
      * if the front substring matches any of the Indicators
      * otherwise throws an exception for a wrong input file.
      */
-    public Tokens getIndicator() {
-        Tokens ind = Tokens.EOI;
-        if (line.trim().isEmpty()) {
-            ind = Tokens.EOL;
+    public ArrayList<Object> tokenizeMessage(String text) throws IncorrectFormatException {
+        ArrayList<Object> arrayList = new ArrayList<>();
+        String[] splitText = text.split(System.getProperty("line.separator"));
+        if (checkValidity(splitText)) {
+            for (String line : splitText) {
+                if (line.startsWith("Time:")) {
+                    arrayList.add(line.substring(5));
+                }
+                if (line.startsWith("Name:")) {
+                    arrayList.add(line.substring(5));
+                }
+                if (line.startsWith("Message:")) {
+                    arrayList.add(line.substring(8));
+                }
+            }
         } else {
-            if (line.startsWith("Time")) {
-                ind = Tokens.TIMESTAMP;
-            }
-            if (line.startsWith("Name")) {
-                ind = Tokens.NICKNAME;
-            }
-            if (line.startsWith("Message")) {
-                ind = Tokens.CONTENT;
-            }
+            throw new IncorrectFormatException("File Format Is Incorrect.");
         }
-        return ind;
+        return arrayList;
     }
 
     /**
-     * It checks if the indicator is equivalent to any of Tokens
-     * and returns the rest of the string after colon (:).
+     * It tokenizes a single line of message into texts and smiles.
+     * @param stringObj the input string representing CONTENT that has been tokenized from a message text
+     * @return ArrayList of texts and smiles to be displayed in a TextFlow
      */
-    public String getContext(Tokens indicator) {
-
-        if (indicator == Tokens.TIMESTAMP || indicator == Tokens.NICKNAME) {
-            return line.substring(5);
-        } else if (indicator == Tokens.CONTENT) {
-            return line.substring(8);
-        } else {
-            return "";
+    public ArrayList<Object> tokenizeContent(Object stringObj) {
+        String line = (String)stringObj;
+        ArrayList<Object> objList = new ArrayList<>();
+        // previousIndex represents the index of the previous smile to pinpoint the substring between smiles
+        int previousIndex = -2;
+        for (int i = 0; i < line.length() - 1; i++) {
+            // if the iteration encounters smile characters,
+            if (line.charAt(i) == ':') {
+                // happy smiley
+                if (line.charAt(i+1) == ')') {
+                    // if the substring in front of smile is not empty, store the substring
+                    if (!line.substring(previousIndex + 2, i).equals("")) {
+                        objList.add(line.substring(previousIndex + 2, i));
+                        previousIndex = i;
+                    }
+                    // store the smile
+                    objList.add(new Smile(i, ":)"));
+                }
+                // sad smiley
+                if (line.charAt(i+1) == '(') {
+                    if (!line.substring(previousIndex + 2, i).equals("")) {
+                    objList.add(line.substring(previousIndex + 2, i));
+                    previousIndex = i;
+                }
+                    objList.add(new Smile(i, ":("));
+                }
+            }
         }
+        return objList;
     }
 
+    /**
+     * It checks if the message has a valid format to continue with tokenization.
+     * @param splitText an array of strings split from a message text by line separator
+     * @return true or false depending on the legitimacy of the format
+     */
+    private boolean checkValidity(String[] splitText) {
+        boolean validity = true;
+        int i = 0;
+        // runs while the format is correct and there is any line to assess
+        while (validity && i < splitText.length) {
+            switch (i % 4) {
+                // proof-read all timestamp, nickname, content and 'end of message' lines
+                case 0:
+                    validity = splitText[i].startsWith("Time:");
+                    i++;
+                    break;
+                case 1:
+                    validity = splitText[i].startsWith("Name:");
+                    i++;
+                    break;
+                case 2:
+                    validity = splitText[i].startsWith("Message:");
+                    i++;
+                    break;
+                case 3:
+                    validity = splitText[i].isEmpty();
+                    i++;
+                    break;
+            }
+        }
+        // if there is a faulty line, the loop stops and returns false
+        // if everything is fine, it returns true
+        return validity;
+    }
 }
