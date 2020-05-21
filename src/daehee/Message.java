@@ -1,50 +1,45 @@
 package daehee;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
+
+/**
+ * The class provides a method to read a file text
+ * and stores the whole message stub tokenized from
+ * the class MessageToken.
+ */
 
 public class Message {
 
-    private DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private String text;
+    private Tokenizer tokenizer;
+    private ArrayList<Object> msgTokens = new ArrayList<>();
 
-    private String wholeText;
-    private Date timeRecorded;
-    private String username;
-    private String messageText;
-    private Path msgPath;
-
-    public Message(Path path) {
-        this.msgPath = path;
+    public void read(File file) throws IncorrectFormatException {
+        tokenizer = new Tokenizer();
+        try {
+            text = Files.readString(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.iterateText();
     }
 
-    private void parseText(Path path) throws IOException {
-        wholeText = Files.readString(path);
+    private void iterateText() throws IncorrectFormatException {
+        tokenizer = new Tokenizer();
+        // first, tokenize each message stub into timestamp, nickname, content and "end of stub"
+        msgTokens = tokenizer.tokenizeMessage(text);
+        for (int i = 0; i < msgTokens.size(); i++) {
+            if (i % 4 == 2) {
+                // then tokenize each content into smiles and strings
+                msgTokens.set(i, tokenizer.tokenizeContent(msgTokens.get(i)));
+            }
+        }
     }
 
-    public Date getTimeRecorded() {
-        return timeRecorded;
-    }
-
-    public void setTimeRecorded(Date timeRecorded) {
-        this.timeRecorded = timeRecorded;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public ArrayList<Object> getMsgTokens() {
+        return msgTokens;
     }
 }
