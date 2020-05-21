@@ -15,16 +15,21 @@ public class Controller {
     private TextFlow topTextFlow;
     @FXML
     private Label pathLabel;
+    private File lastOpened = null;
 
     public void openFileChooser(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Message File");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Message Files", "*.msg"));
+        if (lastOpened != null) {
+            fileChooser.setInitialDirectory(lastOpened.getParentFile());
+        }
         File file = fileChooser.showOpenDialog(((Node) actionEvent.getTarget()).getScene().getWindow());
         if (file != null) {
             Message msg = new Message();
             Renderer renderer = new Renderer();
             pathLabel.setText(file.getPath());
+            lastOpened = file;
             topTextFlow.getChildren().clear();
             try {
                 msg.read(file);
