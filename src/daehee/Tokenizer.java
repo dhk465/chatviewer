@@ -1,6 +1,7 @@
 package daehee;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The class prepares a message to tokenize into different types.
@@ -34,7 +35,6 @@ public class Tokenizer {
         } else {
             throw new IncorrectFormatException("File Format Is Incorrect.");
         }
-        System.out.println(arrayList.toString());
         return arrayList;
     }
 
@@ -47,28 +47,36 @@ public class Tokenizer {
         String line = (String)stringObj;
         ArrayList<Object> objList = new ArrayList<>();
         // previousIndex represents the index of the previous smile to pinpoint the substring between smiles
-        int previousIndex = -2;
-        for (int i = 0; i < line.length() - 1; i++) {
-            // if the iteration encounters smile characters,
-            if (line.charAt(i) == ':') {
-                // happy smiley
-                if (line.charAt(i+1) == ')') {
-                    // if the substring in front of smile is not empty, store the substring
-                    if (!line.substring(previousIndex + 2, i).equals("")) {
-                        objList.add(line.substring(previousIndex + 2, i));
-                        previousIndex = i;
+        int previousIndex = 0;
+        for (int i = 0; i < line.length(); i++) {
+            if (previousIndex >= line.length()) {
+                break;
+            }
+            String substr = line.substring(previousIndex, i + 1);
+            // if the iteration encounters happy smiley characters,
+            if (line.charAt(i) == ':' && line.charAt(i+1) == ')') {
+                // if the substring in front of smile is not empty, store the substring
+                if (!substr.equals("")) {
+                    if (substr.length() > 1) {
+                        objList.add(substr.substring(0, substr.length() - 2));
                     }
-                    // store the smile
-                    objList.add(new Smile(i, ":)"));
+                    previousIndex = i + 2;
                 }
-                // sad smiley
-                if (line.charAt(i+1) == '(') {
-                    if (!line.substring(previousIndex + 2, i).equals("")) {
-                    objList.add(line.substring(previousIndex + 2, i));
-                    previousIndex = i;
+                // store the smile
+                objList.add(new Smile(i, ":)"));
+            }
+            // sad smiley
+            if (line.charAt(i) == ':' && line.charAt(i+1) == '(') {
+                if (!substr.equals("")) {
+                    if (substr.length() > 1) {
+                        objList.add(substr.substring(0, substr.length() - 2));
+                    }
+                    previousIndex = i + 2;
                 }
-                    objList.add(new Smile(i, ":("));
-                }
+                objList.add(new Smile(i, ":("));
+            }
+            if (i == line.length() - 1) {
+                objList.add(substr);
             }
         }
         return objList;
