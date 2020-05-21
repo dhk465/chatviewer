@@ -33,7 +33,7 @@ public class Tokenizer {
                 }
             }
         } else {
-            throw new IncorrectFormatException("File Format Is Incorrect.");
+            throw new IncorrectFormatException("Text Format Is Incorrect.");
         }
         return arrayList;
     }
@@ -58,22 +58,24 @@ public class Tokenizer {
                 // if the substring in front of smile is not empty, store the substring
                 if (!substr.equals("")) {
                     if (substr.length() > 1) {
-                        objList.add(substr.substring(0, substr.length() - 2));
+                        objList.add(substr.substring(0, substr.length() - 1));
                     }
-                    previousIndex = i + 2;
+                    previousIndex = i++ + 2;
                 }
                 // store the smile
                 objList.add(new Smile(i, ":)"));
+                continue;
             }
             // sad smiley
             if (line.charAt(i) == ':' && line.charAt(i+1) == '(') {
                 if (!substr.equals("")) {
                     if (substr.length() > 1) {
-                        objList.add(substr.substring(0, substr.length() - 2));
+                        objList.add(substr.substring(0, substr.length() - 1));
                     }
-                    previousIndex = i + 2;
+                    previousIndex = i ++ + 2;
                 }
                 objList.add(new Smile(i, ":("));
+                continue;
             }
             if (i == line.length() - 1) {
                 objList.add(substr);
