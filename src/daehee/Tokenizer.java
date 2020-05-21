@@ -16,7 +16,9 @@ public class Tokenizer {
      */
     public ArrayList<Object> tokenizeMessage(String text) throws IncorrectFormatException {
         ArrayList<Object> arrayList = new ArrayList<>();
-        String[] splitText = text.split(System.getProperty("line.separator"));
+        // limit -1 on split() makes it recognize all trailing line separators
+        // therefore taking empty strings from the end of any msg files
+        String[] splitText = text.split(System.getProperty("line.separator"), -1);
         if (checkValidity(splitText)) {
             for (String line : splitText) {
                 if (line.startsWith("Time:")) {
