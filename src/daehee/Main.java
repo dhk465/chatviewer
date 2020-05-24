@@ -6,6 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main class to set up the application with interface information from the chatviewer.fxml
+ */
+
 public class Main extends Application {
 
     @Override

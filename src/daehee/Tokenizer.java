@@ -15,6 +15,9 @@ public class Tokenizer {
      * and returns the rest of the string after colon (:)
      * if the front substring matches any of the Indicators
      * otherwise throws an exception for a wrong input file.
+     * @param text the entirety of text extracted from the .msg file
+     * @return an ArrayList of strings separated by line
+     * @throws IncorrectFormatException an exception caught when the file does not have correct syntax
      */
     public ArrayList<Object> tokenizeMessage(String text) throws IncorrectFormatException {
         ArrayList<Object> arrayList = new ArrayList<>();
