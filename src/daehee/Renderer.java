@@ -1,12 +1,10 @@
 package daehee;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * The class searches for smiley strings inside a raw message text
@@ -16,7 +14,6 @@ public class Renderer {
 
     private Message message;
     private TextFlow textFlow;
-    private final String[] smiles = {":)", ":("};
 
     /**It passes all the message items into a text flow object using tokens stored in Message class
      * @param message an instance of Message that contains processed tokens
@@ -25,8 +22,6 @@ public class Renderer {
     public void render(Message message, TextFlow textFlow) {
         this.message = message;
         this.textFlow = textFlow;
-
-       // System.out.println(message.getMsgTokens().toString());
 
         for (int i = 0; i < message.getMsgTokens().size(); i++) {
             switch (i % 4) {

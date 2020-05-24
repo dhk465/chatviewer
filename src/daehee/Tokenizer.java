@@ -1,7 +1,9 @@
 package daehee;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * The class prepares a message to tokenize into different types.
@@ -42,6 +44,7 @@ public class Tokenizer {
 
     /**
      * It tokenizes a single line of message into texts and smiles.
+     * If more Smileys are added to Smile, it is recommended to tweak this function for the Smileys.
      * @param stringObj the input string representing CONTENT that has been tokenized from a message text
      * @return ArrayList of texts and smiles to be displayed in a TextFlow
      */
@@ -93,12 +96,25 @@ public class Tokenizer {
      */
     private boolean checkValidity(String[] splitText) {
         boolean validity = true;
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
         int i = 0;
         // runs while the format is correct and there is any line to assess
         while (validity && i < splitText.length) {
             switch (i % 4) {
                 // proof-read all timestamp, nickname, content and 'end of message' lines
                 case 0:
+                    try {
+                        String time = splitText[i].substring(5, 13);
+                        if (!splitText[i].isEmpty()) {
+                            try {
+                                LocalTime timeParser = LocalTime.parse(time, timeFormat);
+                            } catch (DateTimeParseException e) {
+                                return false;
+                            }
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        return false;
+                    }
                     validity = splitText[i].startsWith("Time:");
                     i++;
                     break;

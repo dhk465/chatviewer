@@ -17,8 +17,12 @@ public class Message {
     private Tokenizer tokenizer;
     private ArrayList<Object> msgTokens = new ArrayList<>();
 
+    /**
+     * It reads the file and further processes it using iterateText().
+     * @param file the file to extract the text from
+     * @throws IncorrectFormatException an exception caught when the file does not have correct syntax
+     */
     public void read(File file) throws IncorrectFormatException {
-        tokenizer = new Tokenizer();
         try {
             text = Files.readString(file.toPath());
         } catch (IOException e) {
@@ -27,6 +31,11 @@ public class Message {
         this.iterateText();
     }
 
+    /**
+     * It initializes a Tokenizer class to store string into message tokens
+     * and further processes the CONTENTs of the message.
+     * @throws IncorrectFormatException an exception caught when the file does not have correct syntax
+     */
     private void iterateText() throws IncorrectFormatException {
         tokenizer = new Tokenizer();
         // first, tokenize each message stub into timestamp, nickname, content and "end of stub"
@@ -39,6 +48,10 @@ public class Message {
         }
     }
 
+    /**
+     * It gives other classes public access to the msgTokens.
+     * @return an array of message tokens
+     */
     public ArrayList<Object> getMsgTokens() {
         return msgTokens;
     }

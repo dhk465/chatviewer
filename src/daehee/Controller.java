@@ -9,6 +9,10 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import java.io.File;
 
+/**
+ * Controller class connects the interface with the other classes
+ * and gives them access to the components such as TextFlow and Label.
+ */
 
 public class Controller {
     @FXML
@@ -17,6 +21,11 @@ public class Controller {
     private Label pathLabel;
     private File lastOpened = null;
 
+    /**
+     * It allows the user to choose a file, specifically with .msg extension.
+     * And gives other classes information, i.e. path and text, of the file.
+     * @param actionEvent the event of clicking a button
+     */
     public void openFileChooser(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Message File");

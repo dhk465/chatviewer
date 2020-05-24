@@ -2,6 +2,12 @@ package daehee;
 
 import javafx.scene.image.Image;
 
+/**
+ * The class contains all Smiley information and the resource to display with Renderer class.
+ * This can be further developed into a class where more Smileys can be added.
+ * Each instance of Smile represents one particular Smiley.
+ */
+
 public class Smile {
 
     int index;
