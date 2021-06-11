@@ -61,6 +61,6 @@ The application behaves correctly when it:
  - converts Smiley texts into images;
  - opens an error pop-up when an exception is encountered.
  
-A client-side exception is encountered when:
+A testing "user-side" exception is encountered when:
  - the file path is not correct or does not exist;
  - the syntax of the file is incorrect.
