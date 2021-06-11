@@ -27,7 +27,7 @@ CONTENT may contain a combination of special characters e.g. **:)** or **:(** th
 
 ![fsm](doc/fsm.png)
 
-The diagram illustrates every possible action and state of the application in the process of a .msg file.
+The diagram illustrates every possible action and state of the application in process of a .msg file.
 
 ## UML for Entity-Relationship (ER)
 
