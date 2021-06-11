@@ -25,13 +25,13 @@ CONTENT may contain a combination of special characters e.g. **:)** or **:(** th
 
 ## Finite State Machine (FSM)
 
-![er model](doc/fsm.png)
+![fsm](doc/fsm.png)
 
 The diagram illustrates every possible action and state of the application in the process of a .msg file.
 
 ## UML for Entity-Relationship (ER)
 
-![er model](doc/er.png)
+![er](doc/er.png)
 
 The diagram illustrates the relationships between each and every class developed for the application.
 
